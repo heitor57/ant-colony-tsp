@@ -90,9 +90,20 @@ class AntColony:
         return string
 
     def get_name(self):
-        return utils.get_parameters_name(self.__dict__,num_dirs=3)
-    def save_results(self,df):
-        open(self.get_name()).write(df.to_json(orient='records',lines=False)
+        
+        name = f"{DIRS['RESULTS']}"+utils.get_parameters_name(self.__dict__,num_dirs=3)+".json"
+        l = name.split('/')
+        for i in range(2,len(l)):
+            directory = '/'.join(l[:i])
+            print(directory)
+            Path(directory).mkdir(parents=True, exist_ok=True)
+            
+        return name
 
-    def get_results(self,df):
+    def save_results(self, df):
+        f = open(self.get_name(),'w')
+        f.write(df.to_json(orient='records',lines=False))
+        f.close()
+
+    def load_results(self):
         return pd.read_json(self.get_name())
