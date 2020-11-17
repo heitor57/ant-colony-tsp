@@ -72,44 +72,17 @@ def parameters_init():
         list(u'-+0123456789.'))
 
     parser = argparse.ArgumentParser()
-    config = yaml.load(open('config.yaml'),Loader=loader)
-    parameters = config['parameters']
-    pheromony_policies = list(config['pheromony_policies'].keys())
-    for k, v in parameters.items():
-        parser.add_argument('--' + k, default=v,
-                            type=type(v))
 
-    names = []
-    for k1, v1 in config['pheromony_policies'].items():
-        for k2, v2 in v1.items():
-            names.append('--' + k1+'_'+k2)
-            parser.add_argument(names[-1], default=v2,
-                                type=type(v2))
+    parser.add_argument('--config_file','-c',
+                        default="config.yaml",
+                        type=str,
+                        help="Configuration file.")
 
-    for k, v in config['selection'].items():
-        parser.add_argument('--selection_' + k, default=v,
-                            type=type(v))
     args = parser.parse_args()
+    f = open(args.config_file)
+    config = yaml.load(f,Loader=loader)
 
-    for k, v in vars(args).items():
-        if parameters['pheromony_policy'] != k and 'selection_' not in k:
-            parameters[k] = v
-
-    for k, v in vars(args).items():
-        if parameters['pheromony_policy'] == k:
-            config['pheromony_policies'][parameters['pheromony_policy']][k.split("_")[-1]] = v
-
-
-    for k, v in vars(args).items():
-        if 'selection_' in k:
-            config['selection'][k.split("_")[-1]] = v
-
-    for i in pheromony_policies:
-        for j in list(parameters.keys()):
-            if i in j:
-                del parameters[j]
-
-    ac = AntColony(pheromony_kwargs=config['pheromony_policies'][parameters['pheromony_policy']],
-                selection_policy_kwargs=config['selection'],
-                **parameters)
+    ac = AntColony(pheromony_kwargs=config['pheromony_policies'][config['parameters']['pheromony_policy']],
+                   selection_policy_kwargs=config['selection'],
+                   **config['parameters'])
     return config, ac
