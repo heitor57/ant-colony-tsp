@@ -10,7 +10,7 @@ selection:
   alpha: 1
   beta: 5
 general:
-  logging_level: INFO
+  logging_level: ERROR
 # CRITICAL
 # ERROR
 # WARNING

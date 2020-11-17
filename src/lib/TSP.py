@@ -35,7 +35,8 @@ class TSP:
             logger.info(f"Optimal solution: {self.optimal_solution} - {TSPObjective(self).compute(self.optimal_solution)}")
             # print("Optimal solution:",self.optimal_solution,"-",TSPObjective(self).compute(self.optimal_solution))
         except Exception as e:
-            print(e)
+            logger = logging.getLogger('default')
+            logger.warning(e)
         # raise SystemExit
     def __str__(self):
         return f"""{self.distances}
