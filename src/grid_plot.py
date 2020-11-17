@@ -11,16 +11,12 @@ from lib.constants import *
 from lib.utils import *
 TOP_N = 15
 config = yaml.safe_load(open('config.yaml'))
-parameters = {k: [v['default']] for k, v in config['parameters'].items()}
+parameters = {k: [v] for k, v in config['parameters'].items()}
 to_update = {
-    "elitism": [False,True],
-    "num_generations": [25,50,100],
-    "num_pop": [25,50,100],
-    "cross_rate": [0.6,0.8,1.0],
-    "mutation_rate": [0.01,0.05,0.1],
-    # "instance_name": ["p01","p02","p03","p03","p04","p05","p06","p07","p08"],
-    # "instance_name": ["p08"],
-    "instance_name": [sys.argv[1]],
+    "AntSystem_rho": [0.3,0.5,0.7],
+    "AntSystem_Q": [75, 100, 125],
+    "selection_beta": [3,5,7],
+    "instance_name": ['lau15'],
     "eid": list(range(1,NUM_EXECUTIONS+1)),
 }
 parameters.update(to_update)
@@ -35,9 +31,11 @@ for i,combination in enumerate(combinations):
     # print(DIRS['DATA']+name+'.json')
     df = pd.read_json(DIRS['RESULTS']+name+'.json')
     result_df.loc[i,parameters_names] = combination
+    result_df.loc[i,'Best fitness global'] = df.iloc[-1]['Best fitness global']
     result_df.loc[i,'Best fitness'] = df.iloc[-1]['Best fitness']
     result_df.loc[i,'Mean fitness'] = df.iloc[-1]['Mean fitness']
     result_df.loc[i,'Median fitness'] = df.iloc[-1]['Median fitness']
+    result_df.loc[i,'Worst fitness'] = df.iloc[-1]['Worst fitness']
     # if i == 49:
     #     break
 result_df['eid']=pd.to_numeric(result_df['eid'])
