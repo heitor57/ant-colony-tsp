@@ -4,6 +4,7 @@ from concurrent.futures import ProcessPoolExecutor
 import argparse
 import yaml
 import re
+import itertools
 
 from tqdm import tqdm
 import numpy as np
@@ -86,3 +87,25 @@ def parameters_init():
                    selection_policy_kwargs=config['selection'],
                    **config['parameters'])
     return config, ac
+
+def get_names_combinations(config, to_search):
+    def get_dict_element(d,keys):
+        for k in keys:
+            d = d[k]
+        return d
+
+    def get_keys_to_value(d,current_key=(), keys=[]):
+        if isinstance(d,dict):
+            for key in d:
+                new_current_key = current_key+(key,)
+                get_keys_to_value(d[key],new_current_key,keys)
+        else:
+            keys.append(current_key)
+            return False
+        return True
+    keys_to_value = []
+    # print(to_search["selection":{"beta"])
+    get_keys_to_value(to_search,keys=keys_to_value)
+    values = [get_dict_element(to_search,keys) for keys in keys_to_value]
+    combinations = itertools.product(*values)
+    return keys_to_value,combinations
