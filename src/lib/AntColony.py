@@ -95,7 +95,8 @@ class AntColony:
         l = name.split('/')
         for i in range(2,len(l)):
             directory = '/'.join(l[:i])
-            print(directory)
+            logger = logging.getLogger('default')
+            logger.debug(directory)
             Path(directory).mkdir(parents=True, exist_ok=True)
             
         return name

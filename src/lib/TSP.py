@@ -2,6 +2,7 @@ import re
 import numpy as np
 from .TSPObjective import TSPObjective
 from .constants import *
+import logging
 class TSP:
     def __init__(self, distances=None, optimal_solution=None):
         self.distances = distances
@@ -22,16 +23,19 @@ class TSP:
             self.optimal_solution = []
 
             for line in open(instance_name+solution_suffix+".txt"):
-                if line[0] == "#":
+                if line[0] == "#" or line[0] == '\n':
                     continue
                 self.optimal_solution.append(int(line))
             if self.optimal_solution[-1] == self.optimal_solution[0]:
                 self.optimal_solution = self.optimal_solution[:-1]
             self.optimal_solution=np.array(self.optimal_solution)
             self.optimal_solution=self.optimal_solution-1
-            print("Optimal solution:",self.optimal_solution,"-",TSPObjective(self).compute(self.optimal_solution))
-        except:
-            pass
+
+            logger = logging.getLogger('default')
+            logger.info(f"Optimal solution: {self.optimal_solution} - {TSPObjective(self).compute(self.optimal_solution)}")
+            # print("Optimal solution:",self.optimal_solution,"-",TSPObjective(self).compute(self.optimal_solution))
+        except Exception as e:
+            print(e)
         # raise SystemExit
     def __str__(self):
         return f"""{self.distances}

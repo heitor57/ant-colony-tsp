@@ -19,6 +19,8 @@ general:
 # NOTSET
   solution_suffix: "_tsp"
   distances_suffix: "_dist"
+  # solution_suffix: "_s"
+  # distances_suffix: "_d"
 parameters:
   ants_rate: 1.0
   num_iterations: 25 # Number of generations
