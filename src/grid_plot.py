@@ -10,8 +10,10 @@ import sys
 from lib.constants import *
 from lib.utils import *
 TOP_N = 15
-config = yaml.safe_load(open('config.yaml'))
-parameters = {k: [v] for k, v in config['parameters'].items()}
+# config = yaml.safe_load(open('config.yaml'))
+config, ac = utils.parameters_init()
+parameters = ac.__dict__
+# parameters = {k: [v] for k, v in config['parameters'].items()}
 to_update = {
     "AntSystem_rho": [0.3,0.5,0.7],
     "AntSystem_Q": [75, 100, 125],
@@ -27,9 +29,10 @@ combinations = itertools.product(*list(parameters.values()))
 result_df = pd.DataFrame(columns=parameters_names)
 for i,combination in enumerate(combinations):
     p = {k:v for k,v in zip(parameters_names,combination)}
-    name = get_parameters_name(p)
+    ac.__dict__ = p
+    # name = 
     # print(DIRS['DATA']+name+'.json')
-    df = pd.read_json(DIRS['RESULTS']+name+'.json')
+    df = ac.load_results(p)
     result_df.loc[i,parameters_names] = combination
     result_df.loc[i,'Best fitness global'] = df.iloc[-1]['Best fitness global']
     result_df.loc[i,'Best fitness'] = df.iloc[-1]['Best fitness']

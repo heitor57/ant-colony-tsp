@@ -89,6 +89,10 @@ class AntColony:
             string+=f"{k} = {v}\n"
         return string
 
+    # @staticmethod
+    # def get_parameters_name(parameters):
+    #     return f"{DIRS['RESULTS']}"+utils.get_parameters_name(parameters_dirs=3)+".json"
+
     def get_name(self):
         
         name = f"{DIRS['RESULTS']}"+utils.get_parameters_name(self.__dict__,num_dirs=3)+".json"
