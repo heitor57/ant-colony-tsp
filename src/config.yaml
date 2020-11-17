@@ -17,6 +17,8 @@ general:
 # INFO
 # DEBUG
 # NOTSET
+  solution_suffix: "_tsp"
+  distances_suffix: "_dist"
 parameters:
   ants_rate: 1.0
   num_iterations: 25 # Number of generations

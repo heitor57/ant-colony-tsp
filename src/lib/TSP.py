@@ -1,13 +1,14 @@
 import re
 import numpy as np
 from .TSPObjective import TSPObjective
+from .constants import *
 class TSP:
     def __init__(self, distances=None, optimal_solution=None):
         self.distances = distances
         self.optimal_solution = optimal_solution
-    def load(self, instance_name):
+    def load(self, instance_name,distances_suffix,solution_suffix):
         self.distances = []
-        for line in open(instance_name+"_dist.txt"):
+        for line in open(instance_name+distances_suffix+".txt"):
             if line[0] == "#":
                 continue
             line=re.sub("\s+"," ",line).strip()
@@ -20,7 +21,7 @@ class TSP:
         try:
             self.optimal_solution = []
 
-            for line in open(instance_name+"_tsp.txt"):
+            for line in open(instance_name+solution_suffix+".txt"):
                 if line[0] == "#":
                     continue
                 self.optimal_solution.append(int(line))

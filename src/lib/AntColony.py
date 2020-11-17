@@ -34,9 +34,9 @@ class AntColony:
         self.pheromony_policy = pheromony_policy
         self.pheromony_kwargs = pheromony_kwargs
         self.selection_policy_kwargs = selection_policy_kwargs
-    def run(self):
+    def run(self, distances_suffix, solution_suffix):
         tsp = TSP()
-        tsp.load(DIRS['INPUT']+self.instance_name)
+        tsp.load(DIRS['INPUT']+self.instance_name, distances_suffix, solution_suffix)
         best_ant = None
         objective = TSPObjective(tsp)
         pheromones = np.ones(tsp.distances.shape,dtype=float)*self.initial_pheromone

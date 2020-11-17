@@ -41,5 +41,4 @@ matplotlib.rc('font', size=14)
 matplotlib.rc('axes', labelsize=14) 
 matplotlib.rc('lines', linewidth=3)
 
-config = None
 # matplotlib.rc('legend', frameon=False) 
