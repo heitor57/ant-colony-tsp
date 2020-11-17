@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 import os
 import copy
+import re
 
 from lib.constants import *
 
@@ -111,4 +112,8 @@ class AntColony:
         f.close()
 
     def load_results(self):
-        return pd.read_json(self.get_name())
+        string = self.get_name()
+        # string = re.sub(r'{',r'\{',string)
+        # string = re.sub(r'}',r'\}',string)
+        # print(string)
+        return pd.read_json(string)
