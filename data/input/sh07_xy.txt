@@ -1,0 +1,15 @@
+#  sh07_dist.coord.txt
+#  created by TABLE_IO.F90
+#  at 11 February 2009  12:02:11.899 PM
+#
+#  Spatial dimension M =        2
+#  Number of points N =        7
+#  EPSILON (unit roundoff) =   0.222045E-15
+#
+ -0.556541E-05 -0.106006E-05
+   27.0167     -0.182111E-05
+   10.9935      -5.03098    
+   16.9878      -5.03456    
+ -0.260660E-02  -10.9805    
+   27.0228      -11.0063    
+   4.05460       22.0024    
