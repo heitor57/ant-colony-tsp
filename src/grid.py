@@ -8,9 +8,10 @@ from lib.constants import *
 from lib.utils import *
 
 parameters = {
-    "AntSystem_rho": [0.3,0.4,0.5,0.6,0.7],
+    "AntSystem_rho": [0.3,0.5,0.7],
     "AntSystem_Q": [75, 100, 125],
-    "selection_beta": [3,5,7,9,11],
+    "selection_beta": [3,5,7],
+    "instance_name": ['lau15','sgb128'],
     "eid": list(range(1,NUM_EXECUTIONS+1)),
 }
 parameters_names = list(parameters.keys())
