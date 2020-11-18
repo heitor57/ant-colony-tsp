@@ -4,6 +4,7 @@ import re
 import itertools
 import lib.utils as utils
 from lib.constants import *
+from collections import OrderedDict
 # from pathlib import Path
 
 
@@ -28,14 +29,14 @@ parser.add_argument('--config_file','-c',
 
 args = parser.parse_args()
 f = open(args.config_file)
-config = yaml.load(f,Loader=loader)
+config = OrderedDict(yaml.load(f,Loader=loader))
 
 to_search = {
     'pheromony_policies': {'AntSystem':{"rho": [0.3,0.5,0.7],
                                          "Q": [75, 100, 125]}},
     "selection":{"beta": [3,5,7]},
-    'parameters':{"instance_name": ['lau15','sgb128'],
-                  "eid": list(range(1,NUM_EXECUTIONS+1))},
+    # 'parameters':{"instance_name": ['lau15','sgb128'],
+    #               "eid": list(range(1,NUM_EXECUTIONS+1))},
 }
 
 keys_to_value, combinations=utils.get_names_combinations(config,to_search)
@@ -46,5 +47,5 @@ for combination in combinations:
         for k in keys[:-1]:
             tmp = tmp[k]
         tmp[keys[-1]] = v
-    yaml.dump(config,open(f"{DIRS['CONFIGS']}{i}.yaml",'w+'))
+    yaml.dump(dict(config),open(f"{DIRS['CONFIGS']}{i}.yaml",'w+'))
     i+=1

@@ -22,8 +22,8 @@ from lib.pheromony_policies import AntSystem, ElitismAntSystem
 from lib.Ant import Ant
 from lib.SelectionPolicy import SelectionPolicy
 import lib.utils as utils
-from lib.OrderedClass import OrderedClass
-class AntColony(OrderedClass):
+
+class AntColony:
     def __init__(self, initial_pheromone, ants_rate, num_iterations, instance_name, eid,
                  pheromony_policy, pheromony_kwargs,
                  selection_policy_kwargs):
