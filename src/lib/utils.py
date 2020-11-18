@@ -109,3 +109,4 @@ def get_names_combinations(config, to_search):
     values = [get_dict_element(to_search,keys) for keys in keys_to_value]
     combinations = itertools.product(*values)
     return keys_to_value,combinations
+

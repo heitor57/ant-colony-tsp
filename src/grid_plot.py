@@ -45,6 +45,7 @@ result_df = pd.DataFrame(columns=
                          [keys[-1] for keys in keys_to_value])
 
 parameters_names = [i[-1] for i in keys_to_value]
+i = 0
 for combination in combinations:
     for keys, v in zip(keys_to_value,combination):
         tmp = config
@@ -63,6 +64,7 @@ for combination in combinations:
     result_df.loc[i,'Mean fitness'] = df.iloc[-1]['Mean fitness']
     result_df.loc[i,'Median fitness'] = df.iloc[-1]['Median fitness']
     result_df.loc[i,'Worst fitness'] = df.iloc[-1]['Worst fitness']
+    i += 1
 
 result_df['eid']=pd.to_numeric(result_df['eid'])
 # print('Top best fitness')
