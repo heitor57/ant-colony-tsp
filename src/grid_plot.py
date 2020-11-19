@@ -2,14 +2,15 @@ import os
 from concurrent.futures import ProcessPoolExecutor
 import itertools
 import yaml
+import sys
+import copy
 
 import numpy as np
 import pandas as pd
-import sys
 
 from lib.constants import *
 from lib.utils import *
-
+TOP_N = 15
 loader = yaml.SafeLoader
 loader.add_implicit_resolver(
     u'tag:yaml.org,2002:float',
@@ -35,7 +36,8 @@ to_search = {
     'pheromony_policies': {'AntSystem':{"rho": [0.3,0.5,0.7],
                                          "Q": [75, 100, 125]}},
     "selection":{"beta": [3,5,7]},
-    'parameters':{"instance_name": ['lau15','sgb128'],
+    'parameters':{
+        # "instance_name": ['lau15','sgb128'],
                   "eid": list(range(1,NUM_EXECUTIONS+1))},
 }
 # parameters_names=['rho','Q','betas','eid']
@@ -59,6 +61,7 @@ for combination in combinations:
                    selection_policy_kwargs=config['selection'],
                    **config['parameters'])
     df = ac.load_results()
+    result_df.loc[i,parameters_names] = combination
     result_df.loc[i,'Best fitness global'] = df.iloc[-1]['Best fitness global']
     result_df.loc[i,'Best fitness'] = df.iloc[-1]['Best fitness']
     result_df.loc[i,'Mean fitness'] = df.iloc[-1]['Mean fitness']
@@ -68,15 +71,15 @@ for combination in combinations:
 
 result_df['eid']=pd.to_numeric(result_df['eid'])
 # print('Top best fitness')
-import pandas
 with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-    pandas.set_option('display.expand_frame_repr', False)
-    tmp = list(to_update.keys())
+    # print(result_df)
+    pd.set_option('display.expand_frame_repr', False)
+    tmp = copy.copy(parameters_names)
     tmp.remove('eid')
-    a=result_df.groupby(list(set(result_df.columns)-{'Best fitness','Mean fitness','Median fitness', 'eid'})).\
-        agg({i: ['mean','std'] for i in {'Best fitness','Mean fitness','Median fitness', 'eid'}}).\
-        sort_values(by=[('Best fitness','mean')],ascending=False).reset_index()[tmp+['Best fitness','Mean fitness','Median fitness']].head(TOP_N)
-    open(f"{sys.argv[1]}_output.txt",'w').write(a.to_string())
+    a=result_df.groupby(list(set(result_df.columns)-{'Best fitness global','Best fitness','Mean fitness','Median fitness','Worst fitness', 'eid'})).\
+        agg({i: ['mean','std'] for i in {'Best fitness global', 'Best fitness','Mean fitness','Median fitness','Worst fitness', 'eid'}}).\
+        sort_values(by=[('Best fitness global','mean')],ascending=True).reset_index()[tmp+['Best fitness global','Best fitness','Mean fitness','Median fitness','Worst fitness',]].head(TOP_N)
+    open(f"../doc/{config['parameters']['instance_name']}_output.tex",'w').write(a.to_latex())
 
 
 # print('Top mean fitness')
