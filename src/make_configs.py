@@ -47,5 +47,5 @@ for combination in combinations:
         for k in keys[:-1]:
             tmp = tmp[k]
         tmp[keys[-1]] = v
-    yaml.dump(dict(config),open(f"{DIRS['CONFIGS']}{i}.yaml",'w+'))
+    yaml.dump(dict(config),open(f"{DIRS['CONFIGS']}{i}.yaml",'w+'),sort_keys=False)
     i+=1
