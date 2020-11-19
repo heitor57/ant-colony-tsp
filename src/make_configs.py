@@ -35,8 +35,8 @@ to_search = {
     'pheromony_policies': {'AntSystem':{"rho": [0.3,0.5,0.7],
                                          "Q": [75, 100, 125]}},
     "selection":{"beta": [3,5,7]},
-    # 'parameters':{"instance_name": ['lau15','sgb128'],
-    #               "eid": list(range(1,NUM_EXECUTIONS+1))},
+    'parameters':{"instance_name": ['lau15','sgb128'],
+                  "eid": list(range(1,NUM_EXECUTIONS+1))},
 }
 
 keys_to_value, combinations=utils.get_names_combinations(config,to_search)
