@@ -166,7 +166,7 @@ Uma visão geral, simplificada, do algoritmo feito é dada a seguir (o algoritmo
   \For{$i=1$ to \#Iterações}
   \State Seleciona um ponto de partida aleátorio para cada formiga 
   \For{$k=1$ to $m$}
-  \State Constroi uma solução $s_k$ para a formiga $k$ a usando a regra de probabilidade (equação \ref{eq:probability})
+  \State Constroi uma solução $s_k$ para a formiga $k$ a usando a regra de probabilidade (equação \ref{eq:probability}) até esgotar as arestas viáveis
   \State Calcula o comprimento $L_k$ do circuito criado pela formiga $k$
   \If{$L_k < L^*$}
   \State $s^* \gets s_k, L^* \gets L_k$
@@ -289,7 +289,7 @@ Pela simplicidade e facilidade na busca pela solução ótima nessa instância h
 #+end_export
 
 *** Instância sgb128
-    A instância sgb128 já é bem mais complexa que a análisada anteriormente, primeiramente o gráfico ref:fig:sgb_p1 mostra a execução do melhor conjunto de parâmetros nessa instância. É possível ver quea aptidão média e mediana não seguem muito a melhor aptidão global, isso pode ser devido a complexidade grande do problema, já que as formigas vão ter que explorar mais soluções, irão existir mais caminhos para se decidir qual incluir na solução, e também devido a diversificação aplicada pelos parâmetros, ja dito anteriormente. A melhor aptidão sempre fica próxima da melhor aptidão global nas diversas execuções. É importante notar que o gráfico apresenta a média das execuções das várias execuções, logo a melhora na melhor aptidão global nem sempre segue a melhor aptidão já que é a média que está sendo apresentado e não uma execução.
+    A instância sgb128 já é bem mais complexa que a análisada anteriormente, primeiramente o gráfico ref:fig:sgb_p1 mostra a execução do melhor conjunto de parâmetros nessa instância. É possível ver que a aptidão média e mediana não seguem muito a melhor aptidão global, isso pode ser devido a complexidade grande do problema, já que as formigas vão ter que explorar mais soluções, irão existir mais caminhos para se decidir qual incluir na solução, e também devido a diversificação aplicada pelos parâmetros, ja dito anteriormente. A melhor aptidão sempre fica próxima da melhor aptidão global nas diversas execuções. É importante notar que o gráfico apresenta a média das execuções das várias execuções, logo a melhora na melhor aptidão global nem sempre segue a melhor aptidão já que é a média que está sendo apresentado e não uma execução.
 
 Então todas execuções com esse parâmetro seguem um bom ritmo de melhoramento de soluções. Comparando com a figura ref:fig:sgb_p2 e ref:fig:sgb_p3, elas tem uma diferença menor entre a melhor aptidão e a melhor aptidão global. Isso pode indicar que uma diversificação maior é feita no melhor conjunto de parâmetros, que reforça suposições anteriores. No geral todos parâmetros apresentaram um comportamento semelhante, porém o melhor parâmetro se distoa na questão da diferença entre melhor aptidão e melhor aptidão global.
 
