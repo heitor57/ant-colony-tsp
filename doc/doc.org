@@ -1,0 +1,253 @@
+#+TITLE: Colônia de formigas para o problema do caxeiro viajante
+#+SUBTITLE: Algoritmos Bioinspirados
+#+AUTHOR: Heitor Lourenço Werneck
+#+EMAIL: heitorwerneck@hotmail.com
+#+DATE: 
+#+LANGUAGE: pt
+#+OPTIONS: ^:nil email:nil author:nil toc:nil
+#+LATEX_HEADER: \author{Heitor Lourenço Werneck \\github.com/heitor57\\{\href{mailto:heitorwerneck@hotmail.com}{heitorwerneck@hotmail.com}}}
+#+LATEX_HEADER: \usepackage[AUTO]{babel}
+# mathtools ja inclui amsmath #+LATEX_HEADER: \usepackage{amsmath}
+#+LATEX_HEADER: \usepackage{mathtools}
+#+LATEX_HEADER: \usepackage[binary-units=true]{siunitx}
+#+LATEX_HEADER: \usepackage[top=0.5cm,bottom=1.5cm,left=2cm,right=2cm]{geometry}
+#+LATEX_HEADER: \usepackage{mdframed}
+#+LATEX_HEADER: \usepackage{listings}
+#+LATEX_HEADER: \usepackage[noend]{algpseudocode}
+#+LATEX_HEADER: \usepackage{hyperref}
+#+LATEX_HEADER: \usepackage[Algoritmo]{algorithm}
+#+LATEX_HEADER: \usepackage{tikz}
+#+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_HEADER: \usepackage{colortbl}
+#+LATEX_HEADER: \usepackage{graphicx,wrapfig,lipsum}
+#+LATEX_HEADER: \usepackage{pifont}
+#+LATEX_HEADER: \usepackage{subfigure}
+#+LATEX_HEADER: \usepackage{rotating}
+#+LATEX_HEADER: \usepackage{multirow}
+#+LATEX_HEADER: \usepackage{tablefootnote}
+#+LATEX_HEADER: \usepackage{enumitem}
+#+LATEX_HEADER: \usepackage{natbib}
+#+LATEX_HEADER: \usepackage{dblfloatfix}
+#+LATEX_HEADER: \usepackage{color, colortbl}
+#+LATEX_HEADER: \usepackage{chngcntr}
+#+LATEX_HEADER: \usepackage{epstopdf}
+#+LATEX_HEADER: \usepackage{comment}
+#+LATEX_HEADER: \usepackage{float}
+#+LATEX_HEADER: \usepackage{booktabs}
+
+
+#+latex_class_options: [11pt]
+
+#+PROPERTY: header-args :eval no-export
+#+BEGIN_EXPORT latex
+\usetikzlibrary{arrows, fit, matrix, positioning, shapes, backgrounds,intersections}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{automata, positioning, arrows}
+\usetikzlibrary{calc}
+
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+\BeforeBeginEnvironment{minted}{\begin{mdframed}[backgroundcolor=bg]}
+\AfterEndEnvironment{minted}{\end{mdframed}}
+\numberwithin{equation}{section}
+\algnewcommand{\IfThenElse}[3]{% \IfThenElse{<if>}{<then>}{<else>}
+  \State \algorithmicif\ #1\ \algorithmicthen\ #2\ \algorithmicelse\ #3}
+
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+    text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+    text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [ellipse, draw, fill=red!20, 
+    text width=5em, text centered, rounded corners, minimum height=2em]
+%\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3.5cm,
+%    minimum height=2em]
+
+
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fullflexible,
+  frame=single,
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+% Numbering fix
+\counterwithout{equation}{section} % undo numbering system provided by phstyle.cls
+%\counterwithin{equation}{chapter}  % implement desired numbering system
+	
+\definecolor{Gray}{gray}{0.9}
+#+END_EXPORT
+
+
+* Introdução
+
+
+Colônia de formigas é uma meta-heurística que toma como inspiração o comportamento forrageiro de algumas especies de formigas. Essas formigas depositam feromônio no chão para marcar um bom caminho que deve ser seguido por outros membros da colônia cite:dorigo2006ant. Então o colônia de formigas é aplicada para problemas de otimização com uma abordagem similar a o que acontece na prática com uma colônia de formigas.
+
+Na Otimização por Colônia de Formigas (ACO - Ant Colony Optimization) um número de formigas artificiais constroem soluções para o problema de otimização considerado e trocam informações da qualidade das soluções através da comunicação que também e feita por formigas reais cite:dorigo2006ant.
+
+A ACO está sendo abordada por diversos métodos de otimização de problemas discretos que também são NP-difíceis, que são problemas que nenhum algoritmo que soluciona o problema em tempo polinomial é conhecido, nesses problemas a ACO pode ser utilizada para obter soluções de alta qualidade em tempo viável. Alguns problemas que são tratados utilizando colônia de formigas: caixeiro viajante cite:cite:brezina2011solving,dorigo1997ant,cheng2007modified; roteamento de veículos cite:yu2009improved,bell2004ant; coloração de grafos cite:bessedik2005ant,salari2005aco e outros cite:dorigo2006ant.
+
+Esse trabalho consiste na implementação e análise de um algoritmo de colônia de formigas para a solução do problema do caixeiro viajante.
+
+* Problema
+
+O problema do caixeiro viajante (PCV) consiste na busca por um circuito  que possua a menor distância, começando em qualquer cidade e visitando todas outras cidades, cada uma exatamente uma vez, e então voltando para a cidade de origem.
+
+    Este problema pode ser definido formalmente como: dado um conjunto $V = \{v_1, ..., v_n\}$ de $n$ cidades/vértices $v_{i}$ e uma matriz de distâncias $d_{n\times n}$ ($d_{ij}$ é a distância da cidade/vértice $v_i$ até a cidade/vértice $v_j$), tal que $d_{ij} = d_{ji}$ e $d_{ii}=0$, o objetivo é encontrar uma permutação $s$ de V que minimize a função da equação a seguir:
+
+    #+begin_export latex
+    \begin{equation}
+    \label{eq:objfunc}
+    f(s) = \sum_{i=1}^{n-1} d_{s_is_{i+1}} + d_{s_{n}s_1}
+    \end{equation}
+    #+end_export
+
+* Solução
+
+Para tratar o problema do caxeiro viajante será utilizado o modelo de colônia de formigas, como declarado anteriormente. O Ant System é o primeiro algoritmo de ACO proposto na literatura cite:dorigo1996ant, ele foi utilizado devido a simplicidade e eficiência.
+
+O algoritmo implementado seguirá os seguintes passos: a cada iteração os valores de feromônio são atualizados por todas $m$ formigas que construíram uma solução na iteração corrente. Os valores de feromônio ficam em uma matriz $\tau_{n\times n}$, tal que $\tau_{ij}$ denota o feromônio entre o vertíce $v_i$ e o vertíce $v_j$, $\tau_{ij}$ é atualizado após cada iteração de acordo com a regra:
+
+#+begin_export latex
+\begin{equation}
+  \label{eq:pheromony_update}
+  \tau_{ij} \gets (1-\rho)\cdot \tau_{ij} + \sum_{k=1}^{m} \Delta\tau_{ij}^k
+\end{equation}
+#+end_export
+
+tal que $\rho$ é a taxa de evaporação, $\Delta\tau_{ij}^k$ é a quantidade de feromônio deixado pela formiga $k$, sendo este:
+
+#+begin_export latex
+\begin{equation}
+  \label{eq:ant_pheromony}
+  \Delta\tau_{ij}^k = \begin{cases}
+Q/L_k & \text{se a formiga $k$ possui a aresta $(i,j)$ no seu circuito}\\
+0 & \text{caso contrário}\\
+\end{cases}
+\end{equation}
+#+end_export
+
+tal que $Q$ é uma constante e $L_k$ é o comprimento do circuito da formiga $k$.
+
+Na construção de uma solução a formiga vai selecionar a cidade a partir de uma estrátegia probabilistica. Dado uma formiga $k$ na cidade $i$ e com um caminho $s'$ construido até então, a probabilidade de ir para uma outra cidade $j$ será dada por:
+
+#+begin_export latex
+\begin{equation}
+  \label{eq:probability}
+  p_{ij}^k = \begin{cases}
+\frac{\tau_{ij}^\alpha\cdot \eta_{ij}^\beta}{\sum_{e_{il}\in N(s')}\tau_{il}^\alpha\cdot \eta_{il}^\beta} & \text{se $e_{ij} \in N(s')$ }\\
+0 & \text{caso contrário}\\
+\end{cases}
+\end{equation}
+#+end_export
+
+$N(s')$ é o conjunto de arestas que são viáveis para a formiga no estado atual dela, isso é, as arestas para os vertíces/cidades ainda não exploradas pela formiga $k$, a partir da cidade atual dela. Os parâmetros $\alpha$ e $\beta$ controlam, em conjunto, o trade-off da importância que será dada para o feromônio $\tau_{ij}$ e a informação da heurística $\eta_{ij}$ (dado por $\eta_{ij}=1/d_{ij}$, ou seja, a heurística irá priorizar as arestas com menor distância)$.
+
+O ponto de partida para cada formiga é um vértice aleátorio do conjunto de vértices, a partir desse ponto a solução é construida; o críterio de parada do algoritmo é um número de iterações máximo e a melhor solução de todas sempre é preservada.
+
+Uma visão geral, simplificada, do algoritmo feito é dada a seguir (o algoritmo real possui algumas diferenças esetruturais para otimização, porém a lógica é a mesma):
+
+#+begin_export latex
+
+\begin{algorithm}
+  \caption{Algoritmo de ACO}
+  \label{alg:ag}
+  \begin{algorithmic}[1]
+  \State Inicia $\left\lfloor n\cdot \text{Taxa de formigas}\right\rfloor$  (taxa de formigas que serão utilizadas relativo ao tamanho do problema) formigas, todas com soluções vazias
+  \State $L^* \gets +\infty$
+  \State $s^*$
+  \State Inicializa a matriz de feromônios $\tau_{n\times n}$ com $\tau_0$
+  \For{$i=1$ to \#Iterações}
+  \State Seleciona um ponto de partida aleátorio para cada formiga 
+  \For{$k=1$ to $m$}
+  \State Constroi uma solução $s_k$ para a formiga $k$ a usando a regra de probabilidade (equação \ref{eq:probability})
+  \State Calcula o comprimento $L_k$ do circuito criado pela formiga $k$
+  \If{$L_k < L^*$}
+  \State $s^* \gets s_k, L^* \gets L_k$
+  \EndIf 
+  \EndFor
+  \State Atualiza os feromônios a partir da regra dada na equação \ref{eq:pheromony_update}
+  \EndFor
+  \end{algorithmic}
+\end{algorithm}
+#+end_export
+
+Todos parâmetros utilizados no algoritmo são descritos a seguir:
+
+#+CAPTION: Parâmetros
+| Parâmetro        | Descrição                                                                              |
+|------------------+----------------------------------------------------------------------------------------|
+| #Iterações       | Críterio de parada do algoritmo, terminará após #Iterações                             |
+| Taxa de formigas | Taxa de formigas relativo ao tamanho do problema                        |
+| $\tau_0$         | Valor para inicializar a matriz de feromônios                                          |
+| $\rho$           | Taxa de evaporação                                                                     |
+| $Q$              | Constante que define uma taxa de feromônio a ser adicionada, relativa a um comprimento |
+| $\alpha$         | Define um nível de importância para o feromônio na escolha de um caminho               |
+| $\beta$          | Define um nível de importância para a heurística na escolha de um caminho              |
+
+* Resultados
+
+Para a análise de resultados foi utilizado 10 execuções para cada conjunto de parâmetro, devido a natureza probabilística do problema é importante sempre sumarizar os resultados de varias execuções para ter uma ideia do resultado esperado.
+
+Foram utilizadas as instâncias descritas na tabela a seguir, obtidas de \url{https://people.sc.fsu.edu/~jburkardt/datasets/cities/cities.html}.
+
+
+#+CAPTION: Características das instâncias.
+#+ATTR_LATEX: :align |l|l|l|l|
+| Instância | #Cidades | Solução ótima |
+|-----------+----------+---------------|
+| lau15     |       15 | 291           |
+| sgb128    |      128 | -             |
+
+** Calibragem de parâmetros
+
+Para o começo da análise um experimento fatorial completo será realizado em cada instância. Os valores para busca estão indicados na tabela a seguir com o domínio de busca para cada parâmetro (tabela ref:tbl:hyperparameter).
+
+#+CAPTION: Domínio de busca de cada parâmetro.
+#+NAME: tbl:hyperparameter
+|------------------+---------------|
+| #Iterações       | 25            |
+| Taxa de formigas | 1.0           |
+| $\tau_0$         | $10^{-16}$    |
+| $\rho$           | {0.3,0.5,0.7} |
+| $Q$              | {75,100,125}  |
+| $\alpha$         | 1             |
+| $\beta$          | {3,5,7}       |
+|------------------+---------------|
+
+É possível observar que somente 3 parâmetros foram escolhidos para variação. O número de iterações foi escolhido como 25, pois é no geral um número no qual o algoritmo ja se estabiliza em uma solução. A taxa de formigas foi de 1.0 para que o número de formigas sempre seja igual ao número de cidades, e assim uma busca mais completa seja feita. $\tau_0$ foi escolhido um valor baixo arbitrário. O $\alpha$ foi escolhido um valor fixo, 1, e somente com o $\beta$ o trade-off será ajustado.
+
+A taxa de evaporação $\rho$ tem um grande impacto na qualidade das soluções então foi escolhida ser variada, assim como o $Q$ e o $\beta$. Pelo custo computacional grande somente 3 parâmetros foram escolhidos para variação, porém vai ser possível observar que somente com esses parâmetros conseguimos ajustar e dar diferentes comportamentos para o algoritmo, para a busca de melhores soluções.
+
+Depois da execução o top-5 de parâmetros, de cada instância, são descritos na tabela ref:tbl:parameters, onde $\mu$ denota a média e $\sigma$ denota o desvio padrão das 10 execuções. Nessa tabela os dados são obtidos pela ultima geração de cada execução.
+
+** Experimento fatorial
+
+   #+begin_export latex
+      \begin{table}
+        \centering
+\footnotesize
+       \input{lau15_output.tex}
+       \caption{Resultados da instância lau15.}
+       \label{tab:lau15_results}
+      \end{table}
+
+      \begin{table}
+        \centering
+\footnotesize
+       \input{sgb128_output.tex}
+       \caption{Resultados da instância sgb128.}
+       \label{tab:sgb128_results}
+      \end{table}
+   #+end_export
+
+* Conclusão
+
+
+
+bibliography:doc.bib
+bibliographystyle:plain
