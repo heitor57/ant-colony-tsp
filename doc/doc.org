@@ -91,7 +91,7 @@ Colônia de formigas é uma meta-heurística que toma como inspiração o compor
 
 Na Otimização por Colônia de Formigas (ACO - Ant Colony Optimization) um número de formigas artificiais constroem soluções para o problema de otimização considerado e trocam informações da qualidade das soluções através da comunicação que também e feita por formigas reais cite:dorigo2006ant.
 
-A ACO está sendo abordada por diversos métodos de otimização de problemas discretos que também são NP-difíceis, que são problemas que nenhum algoritmo que soluciona o problema em tempo polinomial é conhecido, nesses problemas a ACO pode ser utilizada para obter soluções de alta qualidade em tempo viável. Alguns problemas que são tratados utilizando colônia de formigas: caixeiro viajante cite:cite:brezina2011solving,dorigo1997ant,cheng2007modified; roteamento de veículos cite:yu2009improved,bell2004ant; coloração de grafos cite:bessedik2005ant,salari2005aco e outros cite:dorigo2006ant.
+A ACO está sendo abordada por diversos métodos de otimização de problemas discretos que também são NP-difíceis, que são problemas que nenhum algoritmo que soluciona o problema em tempo polinomial é conhecido, nesses problemas a ACO pode ser utilizada para obter soluções de alta qualidade em tempo viável. Alguns problemas que são tratados utilizando colônia de formigas: caixeiro viajante cite:brezina2011solving,dorigo1997ant,cheng2007modified; roteamento de veículos cite:yu2009improved,bell2004ant; coloração de grafos cite:bessedik2005ant,salari2005aco e outros cite:dorigo2006ant.
 
 Esse trabalho consiste na implementação e análise de um algoritmo de colônia de formigas para a solução do problema do caixeiro viajante.
 
@@ -221,7 +221,7 @@ Para o começo da análise um experimento fatorial completo será realizado em c
 | $\beta$          | {3,5,7}       |
 |------------------+---------------|
 
-É possível observar que somente 3 parâmetros foram escolhidos para variação. O número de iterações foi escolhido como 25, pois é no geral um número no qual o algoritmo ja se estabiliza em uma solução. A taxa de formigas foi de 1.0 para que o número de formigas sempre seja igual ao número de cidades, e assim uma busca mais completa seja feita. $\tau_0$ foi escolhido um valor baixo arbitrário. O $\alpha$ foi escolhido um valor fixo, 1, e somente com o $\beta$ o trade-off será ajustado.
+É possível observar que somente 3 parâmetros foram escolhidos para variação, ja que em instâncias grandes um tempo grande é necessário para realizar cada execução. O número de iterações foi escolhido como 25, pois é no geral um número no qual o algoritmo ja se estabiliza em uma solução. A taxa de formigas foi de 1.0 para que o número de formigas sempre seja igual ao número de cidades, e assim uma busca mais completa seja feita. $\tau_0$ foi escolhido um valor baixo arbitrário. O $\alpha$ foi escolhido um valor fixo, 1, e somente com o $\beta$ o trade-off será ajustado.
 
 A taxa de evaporação $\rho$ tem um grande impacto na qualidade das soluções então foi escolhida ser variada, assim como o $Q$ e o $\beta$. Pelo custo computacional grande somente 3 parâmetros foram escolhidos para variação, porém vai ser possível observar que somente com esses parâmetros conseguimos ajustar e dar diferentes comportamentos para o algoritmo, para a busca de melhores soluções.
 
@@ -269,16 +269,65 @@ Essa instância é bem complexa então diversas melhorias foram obtidas variando
 
 ** Análise das melhores soluções
 
-Também é importante analisar os parâmetros indivídualmente (suas execuções) para entender possíveis situações e seus comportamentos.
+Também é importante analisar os parâmetros indivídualmente (suas execuções) para entender possíveis situações e seus comportamentos. Serão apresentados dois gráficos, um da média das execuções durante as iterações e outro de cada execução individualmente.
 
 *** Instância lau15
+Na figura ref:fig:lau15_p1 é possível ver que a média, mediana e pior aptidão vão convergindo para o melhor caminho durante o tempo, o que significa que as formigas com o tempo vão tender mais para um certo caminho o que é o esperado. Como a melhor aptidão global chega no ótimo rapidamente então esse comportamento de convergência ao melhor é esperado com o tempo, por isso não vemos muitas diferenças entre melhor aptidão e melhor aptidão global após a quarta iteração.
 
+Um outro ponto a se notar, que com a facilidade dessa instância uma execução consegue chegar em um valor ótimo logo na primeira iteração.
 
+Pela simplicidade e facilidade na busca pela solução ótima nessa instância há poucas análises a se fazer, porém os gráficos validam o método criado para encontrar boas soluções para o problema do caxeiro viajante. 
+
+    #+begin_export latex
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{../img/lau15_0.3_75_3_mean_and_median_and_best.eps}
+	\includegraphics[scale=0.5]{../img/lau15_0.3_75_3_multiple_executions.eps}
+	\caption{Execuções do melhor conjunto de parâmetros da instância lau15.}
+	\label{fig:lau15_p1}
+\end{figure}
+#+end_export
 
 *** Instância sgb128
+    A instância sgb128 já é bem mais complexa que a análisada anteriormente, primeiramente o gráfico ref:fig:sgb_p1 mostra a execução do melhor conjunto de parâmetros nessa instância. É possível ver quea aptidão média e mediana não seguem muito a melhor aptidão global, isso pode ser devido a complexidade grande do problema, já que as formigas vão ter que explorar mais soluções, irão existir mais caminhos para se decidir qual incluir na solução, e também devido a diversificação aplicada pelos parâmetros, ja dito anteriormente. A melhor aptidão sempre fica próxima da melhor aptidão global nas diversas execuções. É importante notar que o gráfico apresenta a média das execuções das várias execuções, logo a melhora na melhor aptidão global nem sempre segue a melhor aptidão já que é a média que está sendo apresentado e não uma execução.
+
+Então todas execuções com esse parâmetro seguem um bom ritmo de melhoramento de soluções. Comparando com a figura ref:fig:sgb_p2 e ref:fig:sgb_p3, elas tem uma diferença menor entre a melhor aptidão e a melhor aptidão global. Isso pode indicar que uma diversificação maior é feita no melhor conjunto de parâmetros, que reforça suposições anteriores. No geral todos parâmetros apresentaram um comportamento semelhante, porém o melhor parâmetro se distoa na questão da diferença entre melhor aptidão e melhor aptidão global.
+
+Também é possível ver que na figura ref:fig:sgb_p1, as linhas de execuções são mais diversas comparada aos outros parâmetros.
+    #+begin_export latex
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{../img/sgb128_0.7_100_3_mean_and_median_and_best.eps}
+	\includegraphics[scale=0.5]{../img/sgb128_0.7_100_3_multiple_executions.eps}
+	\caption{Execuções do melhor conjunto de parâmetros da instância sgb128.}
+	\label{fig:sgb_p1}
+\end{figure}
+#+end_export
+
+    #+begin_export latex
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{../img/sgb128_0.7_125_3_mean_and_median_and_best.eps}
+	\includegraphics[scale=0.5]{../img/sgb128_0.7_125_3_multiple_executions.eps}
+	\caption{Execuções do segundo melhor conjunto de parâmetros da instância sgb128.}
+	\label{fig:sgb_p2}
+\end{figure}
+#+end_export
+
+
+    #+begin_export latex
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{../img/sgb128_0.3_75_3_mean_and_median_and_best.eps}
+	\includegraphics[scale=0.5]{../img/sgb128_0.3_75_3_multiple_executions.eps}
+	\caption{Execuções do terceiro melhor conjunto de parâmetros da instância sgb128.}
+	\label{fig:sgb_p3}
+\end{figure}
+#+end_export
 
 * Conclusão
 
+Com esse trabalho foi possível ver na prática a efetividade de um dos primeiros algoritmos de otimização por colônia de formigas, o Ant System, e o problema do caxeiro viajante foi tratado, testando em 2 instâncias, uma com a qual foi possível obter a solução ótima, e uma outra que foi possível obter boas soluções.
 
 
 bibliography:doc.bib

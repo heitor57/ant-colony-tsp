@@ -40,7 +40,7 @@ for i in range(1,NUM_EXECUTIONS+1):
     ax.plot(df['Best fitness global'],label=f'Execução {i}')
 
 ax.set_ylabel("Aptidão")
-ax.set_xlabel("Geração")
+ax.set_xlabel("Iteração")
 ax.legend()
 
 fig.savefig(f"{DIRS['IMG']}{ac.instance_name}_{ac.pheromony_kwargs['rho']}_{ac.pheromony_kwargs['Q']}_{ac.selection_policy_kwargs['beta']}_multiple_executions.eps",bbox_inches="tight")

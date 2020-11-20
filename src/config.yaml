@@ -10,7 +10,7 @@ selection:
   alpha: 1
   beta: 5
 general:
-  logging_level: ERROR
+  logging_level: INFO
 # CRITICAL
 # ERROR
 # WARNING
@@ -25,6 +25,6 @@ parameters:
   ants_rate: 1.0
   num_iterations: 25 # Number of generations
   eid: 1
-  instance_name: "sgb128"
+  instance_name: "lau15"
   pheromony_policy: "AntSystem"
   initial_pheromone: 10e-16
