@@ -244,7 +244,9 @@ Nessa instância fica bem claro uma carácteristica do algoritmo implementado, q
 
 Essa instância é bem complexa então diversas melhorias foram obtidas variando os parâmetros e cada parâmetro possui pequenas melhorias em relação a outros. A solução ótima para essa instância não é conhecida então as comparações serão feitas entre as soluções obtidas.
 
-É possível observar que os melhores parâmetros, de acordo com espaço de busca, estão tentando priorizar mais a informação de distância das cidades do que o feromônio (com esse maior balanço uma convergência mais lenta é realizada), porém para os 2 melhores parâmetros mais evaporação foi escolhida, o que mostra uma maior necessidade por diversificação das soluções que ajudou na obtenção da solução melhor cite:kumar2011note. Com esses parâmetros um Q mais elevado foi priorizado, o conjunto de parâmetros com Q de 75 obteve uma grande diferença de qualidade de soluções, ficando 13 posições abaixo da melhor solução somente com essa pequena diferença, demonstrando a importância desse parâmetro.
+É possível observar que os melhores parâmetros, de acordo com espaço de busca, estão tentando priorizar mais a informação de distância das cidades do que o feromônio (com esse maior balanço uma convergência mais lenta é realizada), porém para os 2 melhores parâmetros mais evaporação foi escolhida, o que mostra uma maior necessidade por diversificação das soluções que ajudou na obtenção da solução melhor cite:kumar2011note. Com esses melhores parâmetros um Q mais elevado foi priorizado, o conjunto de parâmetros com Q de 75 obteve uma grande diferença de qualidade de soluções, ficando 13 posições abaixo da melhor solução somente com essa pequena diferença, demonstrando a importância desse parâmetro no ajuste junto com os outros parâmetros. O terceiro melhor conjunto de parâmetros utilizou menos diversificação pela evaporação, porém com um Q menor conseguiu resultados proximos do melhor encontrado.
+
+È possível ver que o melhor conjunto de parâmetros realmente diversifica pelo desvio padrão mais elevado comparado a outros conjuntos de parâmetros, em média, mediana e pior aptidão.
 
    #+begin_export latex
       \begin{table}[H]
@@ -263,6 +265,17 @@ Essa instância é bem complexa então diversas melhorias foram obtidas variando
        \label{tab:sgb128_results}
       \end{table}
    #+end_export
+
+
+** Análise das melhores soluções
+
+Também é importante analisar os parâmetros indivídualmente (suas execuções) para entender possíveis situações e seus comportamentos.
+
+*** Instância lau15
+
+
+
+*** Instância sgb128
 
 * Conclusão
 
