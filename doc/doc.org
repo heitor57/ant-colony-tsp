@@ -1,11 +1,13 @@
-#+TITLE: Colônia de formigas para o problema do caxeiro viajante
+#+LATEX_CLASS: article
+#+LATEX_CLASS_OPTIONS: [twocolumn]
+#+TITLE: Colônia de Formigas Para o Problema Do Caxeiro Viajante
 #+SUBTITLE: Algoritmos Bioinspirados
 #+AUTHOR: Heitor Lourenço Werneck
 #+EMAIL: heitorwerneck@hotmail.com
 #+DATE: 
 #+LANGUAGE: pt
 #+OPTIONS: ^:nil email:nil author:nil toc:nil
-#+LATEX_HEADER: \author{Heitor Lourenço Werneck \\github.com/heitor57\\{\href{mailto:heitorwerneck@hotmail.com}{heitorwerneck@hotmail.com}}}
+#+LATEX_HEADER: \author{Heitor Lourenço Werneck \\{\href{mailto:heitorwerneck@hotmail.com}{heitorwerneck@hotmail.com}}}
 #+LATEX_HEADER: \usepackage[AUTO]{babel}
 # mathtools ja inclui amsmath #+LATEX_HEADER: \usepackage{amsmath}
 #+LATEX_HEADER: \usepackage{mathtools}
@@ -205,10 +207,10 @@ Foram utilizadas as instâncias descritas na tabela a seguir, obtidas de \url{ht
 
 ** Calibragem de parâmetros
 
-Para o começo da análise um experimento fatorial completo será realizado em cada instância. Os valores para busca estão indicados na tabela a seguir com o domínio de busca para cada parâmetro (tabela ref:tbl:hyperparameter).
+Para o começo da análise um experimento fatorial completo será realizado em cada instância. Os valores para busca estão indicados na tabela a seguir com o domínio de busca para cada parâmetro (tabela ref:tab:hyperparameter).
 
 #+CAPTION: Domínio de busca de cada parâmetro.
-#+NAME: tbl:hyperparameter
+#+NAME: tab:hyperparameter
 |------------------+---------------|
 | #Iterações       | 25            |
 | Taxa de formigas | 1.0           |
@@ -223,12 +225,29 @@ Para o começo da análise um experimento fatorial completo será realizado em c
 
 A taxa de evaporação $\rho$ tem um grande impacto na qualidade das soluções então foi escolhida ser variada, assim como o $Q$ e o $\beta$. Pelo custo computacional grande somente 3 parâmetros foram escolhidos para variação, porém vai ser possível observar que somente com esses parâmetros conseguimos ajustar e dar diferentes comportamentos para o algoritmo, para a busca de melhores soluções.
 
-Depois da execução o top-5 de parâmetros, de cada instância, são descritos na tabela ref:tbl:parameters, onde $\mu$ denota a média e $\sigma$ denota o desvio padrão das 10 execuções. Nessa tabela os dados são obtidos pela ultima geração de cada execução.
+Depois da execução o top-15 parâmetros, de cada instância, são descritos nas tabelas ref:tab:sgb128_results e ref:tab:lau15_results, onde $\mu$ denota a média e $\sigma$ denota o desvio padrão das 10 execuções. Nessa tabela os dados são obtidos pela ultima iteração de cada execução.
+
+A coluna "Melhor aptidão global" descreve o melhor valor obtido na ultima iteração, de todas soluções obtidas durante toda execução da meta-heurística.
+
+"Melhor aptidão" descreve a melhor valor obtido nas formigas da última iteração, as outras colunas seguem a mesma lógica.
 
 ** Experimento fatorial
+De acordo com a tabela ref:tab:lau15_results foi possível ver que na instância mais simples o valor ótimo foi facilmente obtido por diversos conjuntos de parâmetros e execuções, assim como um desvio padrão de 0 que indica que todas execuções conseguiram chegar na solução ótima. Isso mostra que o algoritmo implementado consegue até mesmo obter a solução ótima no caso de uma instância simples.
+
+Outros valores da tabela indicam que as formigas convergiram para a melhor solução. As formigas também não tiveram muitos outliers, o que mostra uma busca mais inteligente, proxima da solução de mais qualidade. Poucos valores foram distantes da melhor solução, porém até mesmo esses não são mais que duas vezes a melhor solução. A variação no geral neste algoritmo é baixa, tanto para as piores soluções, media, mediana e melhor solução entre execuções. Isso pode ser dado por diversas fatores: o modelo apresentado é faz a construção da solução direcionado a boas soluções, dificilmente uma opção local muito ruim será incluída em uma solução; o problema não apresenta fortes distinções entre soluções ou pequenas variações em soluções, já que em outros problemas pequenas modificações podem gerar grandes diferenças na aptidão de uma solução (e.g., tornar a solução inviável).
+
+No geral todos parâmetros conseguiram chegar na solução ótima, devido a instância ser muito simples não há muito o que analisar, então vamos focar mais na análise da próxima instância que é mais complexa.
+
+Na tabela ref:tab:sgb128_results que mostra os resultados da instância sgb128 é possível observar que nessa instância muitas questões da instância anterior se repetiram, como por exemplo: a variação entre execuções não é tão grande; formigas bem estáveis em relação a soluções, os outliers não são tão extremos, porém isso também é um bom indicativo da continuação de procura por boas soluções não obvias que podem ser boas.
+
+Nessa instância fica bem claro uma carácteristica do algoritmo implementado, que a cada iteração um novo conjunto de formigas é gerado e essas muitas vezes não vão chegar em uma melhor solução já obtida, porém podem continuar buscando outras próximas da melhor solução, o que mostra uma forte característica de diversificação. Com uma boa solução encontrada então é realmente interessantem gastar recursos computacionais para procura de outras soluções ainda não exploradas, com a busca sendo guiada com informações de boas soluções atráves do feromônio.
+
+Essa instância é bem complexa então diversas melhorias foram obtidas variando os parâmetros e cada parâmetro possui pequenas melhorias em relação a outros. A solução ótima para essa instância não é conhecida então as comparações serão feitas entre as soluções obtidas.
+
+É possível observar que os melhores parâmetros, de acordo com espaço de busca, estão tentando priorizar mais a informação de distância das cidades do que o feromônio (com esse maior balanço uma convergência mais lenta é realizada), porém para os 2 melhores parâmetros mais evaporação foi escolhida, o que mostra uma maior necessidade por diversificação das soluções que ajudou na obtenção da solução melhor cite:kumar2011note. Com esses parâmetros um Q mais elevado foi priorizado, o conjunto de parâmetros com Q de 75 obteve uma grande diferença de qualidade de soluções, ficando 13 posições abaixo da melhor solução somente com essa pequena diferença, demonstrando a importância desse parâmetro.
 
    #+begin_export latex
-      \begin{table}
+      \begin{table}[H]
         \centering
 \footnotesize
        \input{lau15_output.tex}
@@ -236,7 +255,7 @@ Depois da execução o top-5 de parâmetros, de cada instância, são descritos 
        \label{tab:lau15_results}
       \end{table}
 
-      \begin{table}
+      \begin{table}[H]
         \centering
 \footnotesize
        \input{sgb128_output.tex}
