@@ -1,0 +1,30 @@
+pheromony_policies:
+  AntSystem:
+    rho: 0.3
+    Q: 75
+  ElitismAntSystem:
+    rho: 0.5
+    Q: 100
+    epsilon: 0.1
+selection:
+  alpha: 1
+  beta: 3
+general:
+  logging_level: INFO
+# CRITICAL
+# ERROR
+# WARNING
+# INFO
+# DEBUG
+# NOTSET
+  solution_suffix: "_tsp"
+  distances_suffix: "_dist"
+  # solution_suffix: "_s"
+  # distances_suffix: "_d"
+parameters:
+  ants_rate: 1.0
+  num_iterations: 25 # Number of generations
+  eid: 1
+  instance_name: "lau15"
+  pheromony_policy: "AntSystem"
+  initial_pheromone: 10e-16
