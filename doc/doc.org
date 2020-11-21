@@ -1,6 +1,6 @@
 #+LATEX_CLASS: article
 #+LATEX_CLASS_OPTIONS: [twocolumn]
-#+TITLE: Colônia de Formigas Para o Problema Do Caxeiro Viajante
+#+TITLE: Colônia de Formigas Para o Problema Do Caixeiro Viajante
 #+SUBTITLE: Algoritmos Bioinspirados
 #+AUTHOR: Heitor Lourenço Werneck
 #+EMAIL: heitorwerneck@hotmail.com
