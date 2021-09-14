@@ -1,4 +1,4 @@
-# Ant Colony To Solve Travelling Salesman Problem
+# :ant: :train2: Ant Colony to solve Travelling Salesman Problem
 
 ## Configuration
 
